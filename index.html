@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seven Dale Consultants — Asset. Performance. Optimized</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ══════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════ */
+:root {
+  --bg:        #e0e5ec;
+  --bg2:       #d8dde6;
+  --bg3:       #dde2ea;
+  --surface:   rgba(255,255,255,0.55);
+  --surface2:  rgba(255,255,255,0.75);
+  --border:    rgba(163,177,198,0.35);
+  --border2:   rgba(163,177,198,0.55);
+  --crimson:   #C0392B;
+  --crimson2:  #e04030;
+  --crimson-glow: rgba(192,57,43,0.22);
+  --gold:      #c9a84c;
+  --text:      #1A1A2E;
+  --text2:     #4a5568;
+  --text3:     #7a8699;
+  --r-lg:      20px;
+  --r-xl:      28px;
+  --r-2xl:     40px;
+  --transition: cubic-bezier(0.23,1,0.32,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* ══ SCROLLBAR ══ */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:#1A1A2E;}
+::-webkit-scrollbar-thumb{background:var(--crimson);border-radius:4px;}
+
+/* ══ NOISE TEXTURE OVERLAY ══ */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.4;
+}
+
+/* ══ TOP BAR ══ */
+.topbar{
+  background:#1A1A2E;
+  border-bottom:1px solid var(--border);
+  padding:8px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:0.74rem;color:var(--text2);gap:12px;flex-wrap:wrap;
+}
+.topbar-left{display:flex;gap:28px;flex-wrap:wrap;align-items:center;}
+.topbar-left span{display:flex;align-items:center;gap:6px;}
+.topbar-left i{color:var(--crimson);font-size:0.7rem;}
+.topbar-right{display:flex;gap:8px;}
+.topbar-right a{
+  width:26px;height:26px;
+  border:1px solid rgba(163,177,198,0.4);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text2);text-decoration:none;font-size:0.7rem;
+  transition:all 0.2s;
+}
+.topbar-right a:hover{background:var(--crimson);border-color:var(--crimson);color:#fff;}
+
+/* ══ NAVBAR ══ */
+.navbar{
+  background:rgba(224,229,236,0.88);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:1000;
+  height:72px;
+}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-wrap img{height:46px;}
+.nav-links{display:flex;align-items:center;gap:0;list-style:none;height:100%;}
+.nav-links>li{position:relative;height:100%;display:flex;align-items:center;}
+.nav-links>li>a{
+  display:flex;align-items:center;gap:5px;
+  padding:0 16px;height:100%;
+  font-family:'Inter',sans-serif;
+  font-size:0.78rem;font-weight:600;letter-spacing:0.04em;
+  color:var(--text2);text-decoration:none;text-transform:uppercase;letter-spacing:0.03em;
+  transition:color 0.2s;position:relative;
+}
+.nav-links>li>a::after{
+  content:'';position:absolute;bottom:0;left:16px;right:16px;
+  height:2px;background:var(--crimson);
+  transform:scaleX(0);transition:transform 0.3s var(--transition);
+  border-radius:2px 2px 0 0;
+}
+.nav-links>li>a:hover,.nav-links>li>a.active{color:var(--text);}
+.nav-links>li>a:hover::after,.nav-links>li>a.active::after{transform:scaleX(1);}
+.nav-links>li>a i{font-size:0.6rem;transition:transform 0.2s;}
+.nav-links>li:hover>a i{transform:rotate(180deg);}
+
+/* Dropdown */
+.dropdown-menu{
+  display:none;position:absolute;top:100%;left:0;
+  min-width:220px;
+  background:var(--bg);box-shadow:var(--neo-out);
+  border:1px solid rgba(163,177,198,0.4);
+  border-radius:var(--r-lg);
+  padding:10px;z-index:999;
+  box-shadow:0 24px 60px rgba(0,0,0,0.6);
+}
+.dropdown-menu a{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:10px;
+  font-size:0.8rem;font-weight:500;
+  color:var(--text2);text-decoration:none;transition:all 0.15s;
+}
+.dropdown-menu a::before{content:'›';color:var(--crimson);font-weight:700;}
+.dropdown-menu a:hover{background:var(--surface2);color:var(--text);}
+.nav-links>li:hover .dropdown-menu{display:block;}
+
+/* ══ PAGE ROUTER ══ */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ══════════════════════════════════════
+   HOME — HERO
+══════════════════════════════════════ */
+.hero{
+  position:relative;
+  min-height:calc(100vh - 110px);
+  display:flex;align-items:center;
+  overflow:hidden;
+  background:var(--bg);
+}
+/* Animated gradient orbs */
+.hero-orb{
+  position:absolute;border-radius:50%;
+  filter:blur(100px);pointer-events:none;
+}
+.hero-orb-1{
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(192,57,43,0.12),transparent 70%);
+  top:-100px;left:-100px;
+  animation:orbFloat1 8s ease-in-out infinite;
+}
+.hero-orb-2{
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(192,57,43,0.07),transparent 70%);
+  bottom:-80px;right:200px;
+  animation:orbFloat2 10s ease-in-out infinite;
+}
+.hero-orb-3{
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(163,177,198,0.4),transparent 70%);
+  top:40%;right:-50px;
+  animation:orbFloat3 12s ease-in-out infinite;
+}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,30px);}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0);}50%{transform:translate(-30px,-40px);}}
+@keyframes orbFloat3{0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-30px);}}
+
+/* Grid background */
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(163,177,198,0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(163,177,198,0.35) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+}
+
+.hero-inner{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;
+  align-items:center;padding:80px 60px;width:100%;
+}
+
+/* Left content */
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(224,48,48,0.12);
+  border:1px solid rgba(192,57,43,0.25);
+  border-radius:100px;
+  padding:6px 16px;
+  font-size:0.72rem;font-weight:700;letter-spacing:0.12em;
+  color:var(--crimson2);text-transform:uppercase;
+  margin-bottom:28px;
+}
+.hero-eyebrow span{
+  width:6px;height:6px;background:var(--crimson2);
+  border-radius:50%;animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+
+.hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.4rem,4vw,4rem);
+  font-weight:800;line-height:1.1;
+  color:var(--text);margin-bottom:24px;
+}
+.hero-title .accent{
+  background:linear-gradient(135deg,var(--crimson),var(--crimson2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-title .line2{
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,0.25);
+}
+
+.hero-desc{
+  font-size:0.95rem;color:var(--text2);line-height:1.85;
+  max-width:480px;margin-bottom:40px;
+}
+
+.hero-ctas{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--crimson);color:#fff;
+  padding:14px 32px;border-radius:12px;
+  font-size:0.85rem;font-weight:700;letter-spacing:0.04em;
+  text-decoration:none;border:none;cursor:pointer;
+  box-shadow:0 0 0 0 var(--crimson-glow);
+  transition:all 0.3s var(--transition);
+  position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+  border-radius:12px;
+}
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px var(--crimson-glow);
+}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--surface);color:var(--text);
+  padding:14px 32px;border-radius:12px;
+  font-size:0.85rem;font-weight:600;
+  text-decoration:none;border:1px solid rgba(163,177,198,0.4);
+  transition:all 0.3s var(--transition);
+}
+.btn-secondary:hover{background:var(--surface2);transform:translateY(-3px);}
+
+/* Hero stats row */
+.hero-stats{
+  display:flex;gap:32px;margin-top:48px;
+  padding-top:40px;border-top:1px solid var(--border);
+}
+.hero-stat .num{
+  font-family:'Syne',sans-serif;
+  font-size:2rem;font-weight:800;color:var(--text);
+}
+.hero-stat .num span{color:var(--crimson);}
+.hero-stat .lbl{font-size:0.75rem;color:var(--text2);margin-top:2px;font-weight:500;}
+
+/* Right — 3D card stack visual */
+.hero-visual{position:relative;height:520px;}
+.hero-card-stack{
+  position:relative;width:100%;height:100%;
+  perspective:1000px;
+}
+.hc{
+  position:absolute;
+  border-radius:24px;
+  overflow:hidden;
+  transition:transform 0.6s var(--transition),box-shadow 0.6s;
+}
+.hc {
+  transition: transform 0.55s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.55s cubic-bezier(0.23,1,0.32,1);
+  cursor: pointer;
+}
+.hc-1{
+  width:75%;height:72%;
+  top:0;left:12%;
+  transform:rotateX(4deg) rotateY(-8deg) translateZ(0px);
+  box-shadow: 8px 8px 24px rgba(163,177,198,0.7), -4px -4px 14px rgba(255,255,255,0.85);
+  z-index:3;
+}
+.hc-2{
+  width:65%;height:62%;
+  bottom:4%;right:0;
+  background:rgba(192,57,43,0.07) !important;
+  border:1px solid rgba(192,57,43,0.2) !important;
+  transform:rotateX(-3deg) rotateY(6deg) translateZ(-30px);
+  box-shadow: 6px 6px 18px rgba(163,177,198,0.5), -3px -3px 10px rgba(255,255,255,0.7);
+  z-index:2;
+}
+.hc-3{
+  width:50%;height:45%;
+  bottom:12%;left:0;
+  background:rgba(163,177,198,0.25) !important;
+  border:1px solid rgba(163,177,198,0.4) !important;
+  transform:rotateX(2deg) rotateY(4deg) translateZ(-60px);
+  box-shadow: 4px 4px 14px rgba(163,177,198,0.4), -2px -2px 8px rgba(255,255,255,0.6);
+  z-index:1;
+}
+/* hc-2 flies to front on hover */
+.hc-2:hover {
+  transform: rotateX(4deg) rotateY(-8deg) translateZ(40px) scale(1.06) !important;
+  box-shadow: 16px 16px 40px rgba(163,177,198,0.75), -6px -6px 20px rgba(255,255,255,0.95), 0 0 40px var(--crimson-glow) !important;
+  z-index: 10 !important;
+}
+.hero-card-stack:has(.hc-2:hover) .hc-1 {
+  transform: rotateX(2deg) rotateY(6deg) translateZ(-40px) scale(0.95) !important;
+  z-index: 2 !important;
+}
+.hero-card-stack:has(.hc-2:hover) .hc-3 {
+  transform: rotateX(1deg) rotateY(3deg) translateZ(-80px) scale(0.9) !important;
+  z-index: 1 !important;
+}
+/* hc-3 flies to front on hover */
+.hc-3:hover {
+  transform: rotateX(4deg) rotateY(-6deg) translateZ(40px) scale(1.14) !important;
+  box-shadow: 16px 16px 40px rgba(163,177,198,0.75), -6px -6px 20px rgba(255,255,255,0.95), 0 0 40px var(--crimson-glow) !important;
+  z-index: 10 !important;
+}
+.hero-card-stack:has(.hc-3:hover) .hc-1 {
+  transform: rotateX(2deg) rotateY(8deg) translateZ(-40px) scale(0.95) !important;
+  z-index: 2 !important;
+}
+.hero-card-stack:has(.hc-3:hover) .hc-2 {
+  transform: rotateX(-1deg) rotateY(4deg) translateZ(-70px) scale(0.9) !important;
+  z-index: 1 !important;
+}
+/* hc-1 also lifts on hover */
+.hc-1:hover {
+  transform: rotateX(4deg) rotateY(-8deg) translateZ(50px) scale(1.04) !important;
+  box-shadow: 20px 20px 50px rgba(163,177,198,0.75), -8px -8px 24px rgba(255,255,255,0.95), 0 0 50px var(--crimson-glow) !important;
+  z-index: 10 !important;
+}
+/* Label overlay shown on hc-2/hc-3 hover */
+.hc-hover-label {
+  position:absolute; inset:0;
+  background: linear-gradient(to top, rgba(26,26,46,0.82) 0%, transparent 55%);
+  display:flex; flex-direction:column; justify-content:flex-end; padding:22px;
+  opacity:0; transition: opacity 0.35s ease;
+  border-radius: inherit; pointer-events:none;
+}
+.hc-2:hover .hc-hover-label,
+.hc-3:hover .hc-hover-label { opacity:1; }
+.hc-hover-label h4 { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:800; color:#fff; margin-bottom:3px; }
+.hc-hover-label p  { font-size:0.72rem; color:rgba(255,255,255,0.6); }
+
+.hc-img{width:100%;height:100%;object-fit:cover;}
+.hc-1-inner{
+  position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(26,26,46,0.8) 0%, transparent 50%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:28px;
+}
+.hc-1-inner h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:6px;}
+.hc-1-inner p{font-size:0.75rem;color:rgba(255,255,255,0.6);}
+.hc-badge{
+  position:absolute;top:16px;right:16px;
+  background:var(--crimson);color:#fff;
+  font-size:0.68rem;font-weight:700;letter-spacing:0.06em;
+  padding:5px 12px;border-radius:100px;
+}
+
+/* Floating elements */
+.float-tag{
+  position:absolute;
+  background:rgba(15,18,25,0.92);
+  border:1px solid rgba(163,177,198,0.4);
+  border-radius:14px;padding:12px 18px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  z-index:10;
+}
+.float-tag-1{top:10%;right:-20px;animation:floatTag 4s ease-in-out infinite;}
+.float-tag-2{bottom:15%;left:-10px;animation:floatTag 5s ease-in-out infinite reverse;}
+@keyframes floatTag{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.float-tag .ft-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--crimson);}
+.float-tag .ft-lbl{font-size:0.7rem;color:var(--text2);margin-top:2px;}
+
+/* Slider dots for hero (simplified — just changes background image) */
+.hero-slider-dots{
+  position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;z-index:10;
+}
+.hsd{
+  width:28px;height:4px;border-radius:2px;
+  background:rgba(255,255,255,0.2);border:none;cursor:pointer;transition:all 0.3s;
+}
+.hsd.active{background:var(--crimson);width:44px;}
+
+/* ══════════════════════════════════════
+   HOME — KNOW US SECTION
+══════════════════════════════════════ */
+.know-us{
+  padding:100px 60px;
+  background:#1A1A2E;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.know-us-top{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;
+  margin-bottom:72px;align-items:start;
+}
+.section-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:0.72rem;font-weight:700;letter-spacing:0.14em;
+  color:var(--crimson);text-transform:uppercase;margin-bottom:20px;
+}
+.section-eyebrow::before{
+  content:'';display:inline-block;
+  width:20px;height:2px;background:var(--crimson);border-radius:1px;
+}
+.know-us h2{
+  font-family:'Syne',sans-serif;
+  font-size:2rem;font-weight:800;
+  color:var(--text);line-height:1.35;
+}
+.know-us-right{padding-top:8px;}
+.know-us-right p{
+  font-size:0.9rem;color:var(--text2);line-height:1.85;margin-bottom:18px;
+}
+
+/* Service cards — 3D reveal */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.svc-card-3d{
+  position:relative;height:360px;border-radius:var(--r-xl);
+  overflow:hidden;cursor:pointer;
+  transform-style:preserve-3d;
+  transition:transform 0.1s;
+}
+/* Front */
+.svc-card-front{
+  position:absolute;inset:0;
+  background:var(--bg);box-shadow:var(--neo-out);
+  border:1px solid rgba(163,177,198,0.4);
+  border-radius:var(--r-xl);padding:36px 30px 32px;
+  display:flex;flex-direction:column;
+  transition:opacity 0.5s var(--transition),transform 0.5s var(--transition);
+  z-index:2;
+}
+.svc-icon-3d{
+  width:56px;height:56px;border-radius:16px;
+  background:rgba(192,57,43,0.08);
+  border:1px solid rgba(192,57,43,0.18);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;
+  transition:all 0.3s;
+}
+.svc-icon-3d i{font-size:1.4rem;color:var(--crimson);}
+.svc-card-3d:hover .svc-icon-3d{
+  background:var(--crimson);border-color:var(--crimson);
+  box-shadow:0 0 30px var(--crimson-glow);
+}
+.svc-card-3d:hover .svc-icon-3d i{color:#fff;}
+.svc-bar{
+  width:28px;height:2px;background:var(--crimson);
+  border-radius:1px;margin-bottom:18px;
+  transition:width 0.4s var(--transition);
+}
+.svc-card-3d:hover .svc-bar{width:56px;}
+.svc-card-front h4{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  color:var(--text);margin-bottom:12px;
+}
+.svc-card-front p{font-size:0.82rem;color:var(--text2);line-height:1.78;flex:1;}
+.svc-card-front .svc-arrow{
+  margin-top:20px;width:36px;height:36px;
+  border:1px solid rgba(163,177,198,0.4);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text3);font-size:0.8rem;
+  transition:all 0.3s var(--transition);
+}
+.svc-card-3d:hover .svc-arrow{
+  background:var(--crimson);border-color:var(--crimson);
+  color:#fff;transform:rotate(45deg);
+}
+/* Back reveal */
+.svc-card-back{
+  position:absolute;inset:0;border-radius:var(--r-xl);overflow:hidden;
+  clip-path:inset(100% 0 0 0 round 28px);
+  transition:clip-path 0.55s cubic-bezier(0.77,0,0.18,1);
+  z-index:3;
+}
+.svc-card-3d:hover .svc-card-back{clip-path:inset(0% 0 0 0 round 28px);}
+.svc-back-img{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform 0.7s var(--transition);
+}
+.svc-card-3d:hover .svc-back-img{transform:scale(1.08);}
+.svc-back-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(5,5,10,0.92) 0%,rgba(5,5,10,0.4) 55%,transparent 100%);
+  display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:flex-end;
+  padding:32px;gap:12px;
+}
+.svc-back-label{
+  font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;
+  color:#fff;
+  transform:translateY(20px);opacity:0;
+  transition:transform 0.4s var(--transition) 0.15s,opacity 0.4s ease 0.15s;
+}
+.svc-card-3d:hover .svc-back-label{transform:translateY(0);opacity:1;}
+.svc-read-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--crimson);color:#fff;
+  font-size:0.8rem;font-weight:700;letter-spacing:0.05em;
+  padding:10px 24px;border-radius:10px;text-decoration:none;
+  box-shadow:0 4px 20px var(--crimson-glow);
+  transform:translateY(20px);opacity:0;
+  transition:transform 0.4s var(--transition) 0.22s,opacity 0.4s ease 0.22s,background 0.2s;
+}
+.svc-card-3d:hover .svc-read-btn{transform:translateY(0);opacity:1;}
+.svc-read-btn:hover{background:#ff2222;}
+
+/* ══════════════════════════════════════
+   ABOUT PAGE
+══════════════════════════════════════ */
+.page-hero{
+  padding:80px 60px 60px;
+  background:#1A1A2E;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.page-hero::before{
+  content:'';position:absolute;top:-60px;right:60px;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(224,48,48,0.1),transparent 70%);
+  border-radius:50%;pointer-events:none;
+}
+.page-hero .section-eyebrow{display:block;}
+.page-hero h1{
+  font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);
+  font-weight:800;color:var(--text);margin-bottom:16px;line-height:1.2;
+}
+.page-hero h1 span{color:var(--crimson);}
+.page-hero p{font-size:0.95rem;color:var(--text2);max-width:600px;line-height:1.8;}
+
+.about-body{padding:72px 60px;}
+.about-grid-3d{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.about-img-3d{
+  position:relative;border-radius:var(--r-xl);overflow:hidden;
+  aspect-ratio:4/3;
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+}
+.about-img-placeholder{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;color:var(--text3);
+}
+.about-img-placeholder i{font-size:3rem;}
+.about-img-3d::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(224,48,48,0.08),transparent);
+}
+.about-content h3{
+  font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;
+  color:var(--text);margin-bottom:20px;line-height:1.3;
+}
+.about-content p{font-size:0.88rem;color:var(--text2);line-height:1.85;margin-bottom:16px;}
+.about-stats-3d{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;
+}
+.stat-card-3d{
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+  border-radius:var(--r-lg);padding:24px 18px;text-align:center;
+  transition:all 0.3s var(--transition);
+}
+.stat-card-3d:hover{
+  border-color:rgba(224,48,48,0.3);
+  transform:translateY(-4px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.3),0 0 40px rgba(224,48,48,0.08);
+}
+.stat-card-3d .num{
+  font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--crimson);
+}
+.stat-card-3d .lbl{font-size:0.72rem;color:var(--text2);margin-top:4px;font-weight:500;}
+
+/* ══════════════════════════════════════
+   SERVICES PAGE
+══════════════════════════════════════ */
+.services-body{padding:72px 60px;}
+.services-full-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.svc-full-card{
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+  border-radius:var(--r-xl);padding:36px 30px;
+  transition:all 0.35s var(--transition);position:relative;overflow:hidden;
+}
+.svc-full-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--crimson),var(--crimson2));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.4s var(--transition);border-radius:var(--r-xl) var(--r-xl) 0 0;
+}
+.svc-full-card:hover::before{transform:scaleX(1);}
+.svc-full-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(224,48,48,0.2);
+  box-shadow:0 30px 60px rgba(0,0,0,0.4),0 0 0 1px rgba(224,48,48,0.1);
+}
+.svc-full-card .svc-icon-3d{margin-bottom:24px;}
+.svc-full-card h4{
+  font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;
+  color:var(--text);margin-bottom:12px;
+}
+.svc-full-card p{font-size:0.84rem;color:var(--text2);line-height:1.78;}
+
+/* ══════════════════════════════════════
+   PROJECTS PAGE
+══════════════════════════════════════ */
+.projects-body{padding:72px 60px;}
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.proj-card-3d{
+  border-radius:var(--r-xl);overflow:hidden;
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+  transition:all 0.35s var(--transition);
+  group:true;
+}
+.proj-card-3d:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(0,0,0,0.5);}
+.proj-thumb-3d{
+  height:190px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--bg3),#1a1f2e);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text3);font-size:2.5rem;
+}
+.proj-thumb-3d::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,var(--bg3),transparent 50%);
+}
+.proj-info-3d{padding:24px;}
+.proj-info-3d .tag{
+  display:inline-block;font-size:0.68rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;
+  border-radius:100px;margin-bottom:10px;
+}
+.tag-done{background:rgba(46,213,115,0.12);color:#2ed573;border:1px solid rgba(46,213,115,0.2);}
+.tag-ongoing{background:rgba(224,48,48,0.12);color:var(--crimson2);border:1px solid rgba(192,57,43,0.18);}
+.proj-info-3d h4{font-family:'Syne',sans-serif;font-size:0.98rem;font-weight:800;color:var(--text);margin-bottom:6px;}
+.proj-info-3d p{font-size:0.8rem;color:var(--text2);}
+
+/* ══════════════════════════════════════
+   PORTFOLIO PAGE
+══════════════════════════════════════ */
+.portfolio-body{padding:72px 60px;}
+.port-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.port-item-3d{
+  border-radius:var(--r-lg);overflow:hidden;aspect-ratio:1;
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+  position:relative;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.35s var(--transition);
+}
+.port-item-3d i{font-size:2rem;color:var(--text3);}
+.port-item-3d:hover{transform:scale(1.03);box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+.port-overlay-3d{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(224,48,48,0.9),rgba(224,48,48,0.3));
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding:20px;opacity:0;transition:opacity 0.35s;
+}
+.port-item-3d:hover .port-overlay-3d{opacity:1;}
+.port-overlay-3d h5{font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:800;color:#fff;text-align:center;}
+.port-overlay-3d p{font-size:0.72rem;color:rgba(255,255,255,0.75);margin-top:3px;}
+
+/* ══════════════════════════════════════
+   CSR PAGE
+══════════════════════════════════════ */
+.csr-body{padding:72px 60px;}
+.csr-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+.csr-cards{display:flex;flex-direction:column;gap:16px;}
+.csr-card-3d{
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+  border-radius:var(--r-lg);padding:24px;
+  display:flex;gap:18px;align-items:flex-start;
+  transition:all 0.3s var(--transition);
+}
+.csr-card-3d:hover{border-color:rgba(224,48,48,0.25);transform:translateX(6px);box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+.csr-card-icon{
+  width:46px;height:46px;flex-shrink:0;border-radius:13px;
+  background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.18);
+  display:flex;align-items:center;justify-content:center;color:var(--crimson);font-size:1rem;
+}
+.csr-card-3d h5{font-family:'Syne',sans-serif;font-size:0.92rem;font-weight:800;color:var(--text);margin-bottom:6px;}
+.csr-card-3d p{font-size:0.82rem;color:var(--text2);line-height:1.65;}
+.csr-feature{
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);border-radius:var(--r-xl);
+  padding:40px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:18px;min-height:380px;
+  position:relative;overflow:hidden;
+}
+.csr-feature::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%,rgba(224,48,48,0.08),transparent 70%);
+}
+.csr-feature i{font-size:2.5rem;color:var(--crimson);position:relative;}
+.csr-feature h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--text);position:relative;}
+.csr-feature p{font-size:0.85rem;color:var(--text2);line-height:1.8;max-width:300px;position:relative;}
+
+/* ══════════════════════════════════════
+   MEDIA PAGE
+══════════════════════════════════════ */
+.media-body{padding:72px 60px;}
+.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.media-card-3d{
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+  border-radius:var(--r-xl);overflow:hidden;
+  transition:all 0.35s var(--transition);
+}
+.media-card-3d:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(0,0,0,0.5);border-color:rgba(224,48,48,0.2);}
+.media-thumb-3d{
+  height:170px;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text3);font-size:2rem;position:relative;overflow:hidden;
+}
+.media-thumb-3d::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,var(--bg3),transparent 50%);
+}
+.media-body-3d{padding:24px;}
+.media-date{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;color:var(--crimson);text-transform:uppercase;margin-bottom:8px;}
+.media-body-3d h5{font-family:'Syne',sans-serif;font-size:0.92rem;font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.4;}
+.media-body-3d p{font-size:0.8rem;color:var(--text2);line-height:1.65;}
+
+/* ══════════════════════════════════════
+   CONTACT PAGE
+══════════════════════════════════════ */
+.contact-body{padding:72px 60px;}
+.contact-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:48px;}
+.contact-info-3d{display:flex;flex-direction:column;gap:16px;}
+.ci-card{
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+  border-radius:var(--r-lg);padding:22px;
+  display:flex;gap:16px;align-items:flex-start;
+  transition:all 0.3s var(--transition);
+}
+.ci-card:hover{border-color:rgba(224,48,48,0.25);transform:translateX(4px);}
+.ci-icon{
+  width:44px;height:44px;flex-shrink:0;border-radius:12px;
+  background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.18);
+  display:flex;align-items:center;justify-content:center;color:var(--crimson);font-size:1rem;
+}
+.ci-card h5{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.ci-card p{font-size:0.82rem;color:var(--text2);}
+.contact-form-3d{
+  background:var(--bg);box-shadow:var(--neo-out);border:1px solid rgba(163,177,198,0.4);
+  border-radius:var(--r-xl);padding:40px;
+}
+.contact-form-3d h3{
+  font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;
+  color:var(--text);margin-bottom:28px;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-group{margin-bottom:16px;}
+.form-group label{
+  display:block;font-size:0.75rem;font-weight:600;
+  color:var(--text2);margin-bottom:8px;letter-spacing:0.04em;text-transform:uppercase;
+}
+.form-group input,.form-group textarea,.form-group select{
+  width:100%;padding:13px 16px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(163,177,198,0.4);border-radius:12px;
+  font-family:'Inter',sans-serif;font-size:0.85rem;
+  color:var(--text);outline:none;transition:all 0.2s;
+  appearance:none;
+}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text3);}
+.form-group textarea{height:120px;resize:vertical;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{
+  border-color:var(--crimson);background:rgba(224,48,48,0.04);
+  box-shadow:0 0 0 3px rgba(224,48,48,0.12);
+}
+.form-group select option{background:var(--bg);box-shadow:var(--neo-out);}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer{
+  background:#1A1A2E;
+  border-top:1px solid var(--border);
+  padding:64px 60px 28px;
+}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;}
+.footer-brand img{height:44px;margin-bottom:16px;}
+.footer-brand p{font-size:0.82rem;color:var(--text3);line-height:1.8;max-width:280px;}
+.footer-tagline{
+  display:inline-block;margin-top:12px;
+  font-size:0.7rem;font-weight:700;letter-spacing:0.1em;
+  color:var(--crimson);text-transform:uppercase;
+}
+.footer-col h6{
+  font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:800;
+  color:var(--text);margin-bottom:18px;letter-spacing:0.05em;text-transform:uppercase;
+}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:10px;}
+.footer-col ul li a{
+  font-size:0.82rem;color:var(--text3);text-decoration:none;
+  transition:color 0.2s;display:flex;align-items:center;gap:6px;
+}
+.footer-col ul li a::before{content:'›';color:var(--crimson);font-weight:700;}
+.footer-col ul li a:hover{color:var(--text);}
+.footer-bottom{
+  border-top:1px solid var(--border);padding-top:24px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:0.76rem;color:var(--text3);
+}
+.footer-socials{display:flex;gap:10px;}
+.footer-socials a{
+  width:34px;height:34px;border-radius:10px;
+  background:var(--surface);border:1px solid rgba(163,177,198,0.4);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text2);text-decoration:none;font-size:0.8rem;
+  transition:all 0.2s;
+}
+.footer-socials a:hover{background:var(--crimson);border-color:var(--crimson);color:#fff;transform:translateY(-3px);}
+
+/* ══ SCROLL REVEAL ══ */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s var(--transition),transform 0.7s var(--transition);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+
+/* ══ LIGHT THEME COMPREHENSIVE OVERRIDES ══ */
+
+/* Topbar stays charcoal */
+.topbar { background: #1A1A2E !important; color: rgba(255,255,255,0.55) !important; border-bottom: 1px solid rgba(255,255,255,0.07) !important; }
+.topbar-left span { color: rgba(255,255,255,0.55); }
+
+/* Navbar — light frosted */
+.navbar { background: rgba(224,229,236,0.9) !important; border-bottom: 1px solid rgba(163,177,198,0.35) !important; box-shadow: 0 4px 24px rgba(163,177,198,0.3); }
+.nav-links>li>a { color: var(--text2) !important; }
+.nav-links>li>a:hover, .nav-links>li>a.active { color: var(--text) !important; }
+
+/* Dropdown */
+.dropdown-menu { background: var(--bg) !important; border: 1px solid rgba(163,177,198,0.4) !important; box-shadow: var(--neo-out) !important; }
+.dropdown-menu a { color: var(--text2) !important; }
+.dropdown-menu a:hover { background: rgba(163,177,198,0.15) !important; color: var(--text) !important; }
+
+/* Hero */
+.hero { background: var(--bg) !important; }
+.hero-grid { background-image: linear-gradient(rgba(163,177,198,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(163,177,198,0.3) 1px, transparent 1px) !important; }
+.hero-title { color: var(--text) !important; }
+.hero-title .line2 { -webkit-text-stroke: 1.5px rgba(26,26,46,0.2) !important; }
+.hero-desc { color: var(--text2) !important; }
+.hero-stat .num { color: var(--text) !important; }
+.hero-stat .lbl { color: var(--text2) !important; }
+.hero-stats { border-top: 1px solid rgba(163,177,198,0.4) !important; }
+
+/* btn-secondary on light bg */
+.btn-secondary { background: rgba(163,177,198,0.15) !important; color: var(--text) !important; border: 1px solid rgba(163,177,198,0.5) !important; }
+.btn-secondary:hover { background: rgba(163,177,198,0.25) !important; }
+
+/* Hero cards — neomorphic on light */
+.hc-1 { background: var(--bg) !important; box-shadow: var(--neo-out) !important; border: none !important; }
+.hc-2 { background: rgba(192,57,43,0.07) !important; border: 1px solid rgba(192,57,43,0.15) !important; box-shadow: 8px 8px 20px rgba(163,177,198,0.5) !important; }
+.hc-3 { background: rgba(163,177,198,0.3) !important; border: 1px solid rgba(163,177,198,0.4) !important; box-shadow: 6px 6px 16px rgba(163,177,198,0.4) !important; }
+.float-tag { background: var(--bg) !important; border: 1px solid rgba(163,177,198,0.4) !important; box-shadow: var(--neo-out-sm) !important; }
+.float-tag .ft-lbl { color: var(--text2) !important; }
+
+/* Know-us section */
+.know-us { background: var(--bg2) !important; border-top: 1px solid rgba(163,177,198,0.3) !important; border-bottom: 1px solid rgba(163,177,198,0.3) !important; }
+.know-us h2 { color: var(--text) !important; }
+.know-us-right p { color: var(--text2) !important; }
+.section-eyebrow { color: var(--crimson) !important; }
+
+/* Service cards front */
+.svc-card-front { background: var(--bg) !important; border: none !important; box-shadow: var(--neo-out) !important; }
+.svc-card-front h4 { color: var(--text) !important; }
+.svc-card-front p { color: var(--text2) !important; }
+.svc-card-front .svc-arrow { border: 1px solid rgba(163,177,198,0.5) !important; color: var(--text3) !important; background: var(--bg) !important; box-shadow: var(--neo-out-sm) !important; }
+.svc-card-3d:hover .svc-arrow { background: var(--crimson) !important; border-color: var(--crimson) !important; color: #fff !important; box-shadow: 0 4px 16px var(--crimson-glow) !important; }
+.svc-icon-3d { background: rgba(192,57,43,0.07) !important; border: 1px solid rgba(192,57,43,0.15) !important; }
+
+/* Page hero */
+.page-hero { background: #1A1A2E !important; }
+.page-hero h1 { color: #fff !important; }
+.page-hero p { color: rgba(255,255,255,0.6) !important; }
+.page-hero .section-eyebrow { color: var(--crimson2) !important; }
+.page-hero::before { background: radial-gradient(circle,rgba(192,57,43,0.2),transparent 70%) !important; }
+
+/* About */
+.about-body { background: var(--bg); }
+.about-img-3d { background: var(--bg) !important; box-shadow: var(--neo-out) !important; border: none !important; }
+.about-content h3 { color: var(--text) !important; }
+.about-content p { color: var(--text2) !important; }
+.stat-card-3d { background: var(--bg) !important; box-shadow: var(--neo-out-sm) !important; border: none !important; }
+.stat-card-3d .lbl { color: var(--text2) !important; }
+.stat-card-3d:hover { box-shadow: var(--neo-in) !important; border: none !important; }
+
+/* Services */
+.services-body { background: var(--bg); }
+.svc-full-card { background: var(--bg) !important; box-shadow: var(--neo-out) !important; border: none !important; }
+.svc-full-card h4 { color: var(--text) !important; }
+.svc-full-card p { color: var(--text2) !important; }
+.svc-full-card:hover { box-shadow: var(--neo-in) !important; border: none !important; }
+
+/* Projects */
+.projects-body { background: var(--bg); }
+.proj-card-3d { background: var(--bg) !important; box-shadow: var(--neo-out) !important; border: none !important; }
+.proj-thumb-3d { background: linear-gradient(135deg, #d0d6e0, #c8cdd8) !important; color: rgba(26,26,46,0.25) !important; }
+.proj-thumb-3d::after { background: linear-gradient(to top, var(--bg), transparent 50%) !important; }
+.proj-info-3d h4 { color: var(--text) !important; }
+.proj-info-3d p { color: var(--text2) !important; }
+.proj-card-3d:hover { box-shadow: var(--neo-in) !important; }
+
+/* Portfolio */
+.portfolio-body { background: var(--bg); }
+.port-item-3d { background: var(--bg) !important; box-shadow: var(--neo-out) !important; border: none !important; color: rgba(26,26,46,0.2) !important; }
+.port-item-3d:hover { box-shadow: var(--neo-in) !important; }
+
+/* CSR */
+.csr-body { background: var(--bg); }
+.csr-card-3d { background: var(--bg) !important; box-shadow: var(--neo-out-sm) !important; border: none !important; }
+.csr-card-3d:hover { box-shadow: var(--neo-in) !important; transform: translateX(4px); }
+.csr-card-3d h5 { color: var(--text) !important; }
+.csr-card-3d p { color: var(--text2) !important; }
+.csr-feature { background: var(--bg) !important; box-shadow: var(--neo-out) !important; border: none !important; }
+.csr-feature h3 { color: var(--text) !important; }
+.csr-feature p { color: var(--text2) !important; }
+.csr-feature::before { background: radial-gradient(circle at 50% 50%, rgba(192,57,43,0.06), transparent 70%) !important; }
+
+/* Media */
+.media-body { background: var(--bg); }
+.media-card-3d { background: var(--bg) !important; box-shadow: var(--neo-out) !important; border: none !important; }
+.media-card-3d:hover { box-shadow: var(--neo-in) !important; transform: translateY(-4px); }
+.media-thumb-3d { background: var(--bg2) !important; color: rgba(26,26,46,0.2) !important; }
+.media-thumb-3d::after { background: linear-gradient(to top, var(--bg), transparent 50%) !important; }
+.media-body-3d h5 { color: var(--text) !important; }
+.media-body-3d p { color: var(--text2) !important; }
+
+/* Contact */
+.contact-body { background: var(--bg); }
+.ci-card { background: var(--bg) !important; box-shadow: var(--neo-out-sm) !important; border: none !important; }
+.ci-card:hover { box-shadow: var(--neo-in) !important; }
+.ci-card h5 { color: var(--text) !important; }
+.ci-card p { color: var(--text2) !important; }
+.contact-form-3d { background: var(--bg) !important; box-shadow: var(--neo-out) !important; border: none !important; }
+.contact-form-3d h3 { color: var(--text) !important; }
+.form-group label { color: var(--text2) !important; }
+.form-group input, .form-group textarea, .form-group select {
+  background: var(--bg) !important;
+  box-shadow: var(--neo-in) !important;
+  border: none !important; color: var(--text) !important;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  box-shadow: var(--neo-in), 0 0 0 2px var(--crimson) !important;
+}
+.form-group select option { background: var(--bg); color: var(--text); }
+
+/* Footer */
+footer { background: #1A1A2E !important; border-top: 1px solid rgba(255,255,255,0.07) !important; }
+.footer-brand p { color: rgba(255,255,255,0.45) !important; }
+.footer-tagline { color: var(--crimson) !important; }
+.footer-col h6 { color: rgba(255,255,255,0.9) !important; }
+.footer-col ul li a { color: rgba(255,255,255,0.4) !important; }
+.footer-col ul li a:hover { color: rgba(255,255,255,0.85) !important; }
+.footer-bottom { color: rgba(255,255,255,0.3) !important; border-top: 1px solid rgba(255,255,255,0.07) !important; }
+.footer-socials a { background: rgba(255,255,255,0.06) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.4) !important; }
+.footer-socials a:hover { background: var(--crimson) !important; border-color: var(--crimson) !important; color: #fff !important; }
+
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span><i class="fas fa-envelope"></i> support@sevendale-consultants.com</span>
+    <span><i class="fas fa-map-marker-alt"></i> #212, 2nd Floor, Ramanashree Arcade, 18 MG Road, Bengaluru – 560001</span>
+    <span><i class="fas fa-phone"></i> +91 8951424949</span>
+  </div>
+  <div class="topbar-right">
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-twitter"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-pinterest-p"></i></a>
+    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+  </div>
+</div>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a class="logo-wrap" href="#" onclick="showPage('home');return false;">
+    <img src="data:image/png;base64,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" alt="Seven Dale Consultants">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" class="active" onclick="showPage('home');return false;">Home</a></li>
+    <li><a href="#" onclick="showPage('about');return false;">About Us</a></li>
+    <li>
+      <a href="#" onclick="showPage('services');return false;">Services <i class="fas fa-chevron-down"></i></a>
+      <div class="dropdown-menu">
+        <a href="#">Transaction Advisory</a>
+        <a href="#">Design Build</a>
+        <a href="#">Industrial Warehousing</a>
+        <a href="#">Space Planning</a>
+        <a href="#">MEP Consultancy</a>
+      </div>
+    </li>
+    <li><a href="#" onclick="showPage('projects');return false;">Projects Managed</a></li>
+    <li>
+      <a href="#" onclick="showPage('portfolio');return false;">Our Portfolio <i class="fas fa-chevron-down"></i></a>
+      <div class="dropdown-menu">
+        <a href="#">Commercial</a>
+        <a href="#">Corporate</a>
+        <a href="#">Retail</a>
+        <a href="#">Hospitality</a>
+      </div>
+    </li>
+    <li><a href="#" onclick="showPage('csr');return false;">CSR Activities</a></li>
+    <li><a href="#" onclick="showPage('media');return false;">Media</a></li>
+    <li><a href="#" onclick="showPage('contact');return false;">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════ HOME ════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-inner">
+      <!-- Left -->
+      <div>
+        <div class="hero-eyebrow"><span></span>Asset · Performance · Optimized</div>
+        <h1 class="hero-title">
+          <span class="accent">Design &amp; Build</span><br>
+          <span class="line2">Company</span><br>
+          That Delivers
+        </h1>
+        <p class="hero-desc">Where excellence meets innovation in commercial real estate — top-tier services for corporate clients with a proven track record and deep market understanding.</p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-primary" onclick="showPage('services');return false;">Explore Services <i class="fas fa-arrow-right"></i></a>
+          <a href="#" class="btn-secondary" onclick="showPage('projects');return false;">View Projects</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="num">500<span>+</span></div><div class="lbl">Projects Delivered</div></div>
+          <div class="hero-stat"><div class="num">200<span>+</span></div><div class="lbl">Corporate Clients</div></div>
+          <div class="hero-stat"><div class="num">15<span>+</span></div><div class="lbl">Cities Covered</div></div>
+          <div class="hero-stat"><div class="num">12<span>+</span></div><div class="lbl">Years Experience</div></div>
+        </div>
+      </div>
+
+      <!-- Right — 3D visual -->
+      <div class="hero-visual">
+        <div class="hero-card-stack" id="heroStack">
+          <div class="hc hc-1">
+            <img class="hc-img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1200&q=85" alt="Office">
+            <div class="hc-1-inner">
+              <h3>Workspace Solutions</h3>
+              <p>Bengaluru · 45,000 sq.ft</p>
+            </div>
+            <div class="hc-badge">Featured</div>
+          </div>
+          <div class="hc hc-2">
+            <img class="hc-img" src="https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=900&q=85" alt="Build">
+            <div class="hc-hover-label"><h4>Design Build</h4><p>Construction &amp; Fit-Out</p></div>
+          </div>
+          <div class="hc hc-3">
+            <img class="hc-img" src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=900&q=85" alt="Warehouse">
+            <div class="hc-hover-label"><h4>High Performance Workplaces</h4><p>Open Office Solutions</p></div>
+          </div>
+        </div>
+        <!-- Floating tags -->
+        <div class="float-tag float-tag-1">
+          <div class="ft-num">98%</div>
+          <div class="ft-lbl">Client Satisfaction</div>
+        </div>
+        <div class="float-tag float-tag-2">
+          <div class="ft-num">₹800Cr</div>
+          <div class="ft-lbl">Assets Managed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GETTING TO KNOW US -->
+  <section class="know-us">
+    <div class="know-us-top reveal">
+      <div>
+        <div class="section-eyebrow">Getting to know us</div>
+        <h2>We provide integrated workplace solutions for clients under commercial, industrial and hospitality segments.</h2>
+      </div>
+      <div class="know-us-right reveal reveal-delay-1">
+        <p>Our team of seasoned professionals is dedicated to delivering exceptional results, whether you are looking to lease, buy, or sell commercial properties. We offer a comprehensive range of services.</p>
+        <p>At Seven Dale Consultants, we pride ourselves on our commitment to excellence, integrity, and client satisfaction. Our personalised approach ensures that every client receives the attention and expertise they deserve, guiding them through every step of the real estate process with precision and care.</p>
+      </div>
+    </div>
+
+    <!-- 3 Cards -->
+    <div class="svc-grid">
+      <div class="svc-card-3d reveal reveal-delay-1">
+        <div class="svc-card-front">
+          <div class="svc-icon-3d"><i class="fas fa-handshake"></i></div>
+          <div class="svc-bar"></div>
+          <h4>Transaction Advisory</h4>
+          <p>Transaction advisory services encompass providing strategic guidance and support to organisations in their real estate needs, such as workplace solutions, brokerage, acquisitions, dispositions, and lease negotiations. These services aim to help companies optimise their real estate portfolios and make informed decisions to achieve their business objectives.</p>
+          <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="svc-card-back">
+          <div class="svc-back-img" style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=900&q=80');"></div>
+          <div class="svc-back-overlay">
+            <div class="svc-back-label">Transaction Advisory</div>
+            <a href="#" class="svc-read-btn">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-card-3d reveal reveal-delay-2">
+        <div class="svc-card-front">
+          <div class="svc-icon-3d"><i class="fas fa-pencil-ruler"></i></div>
+          <div class="svc-bar"></div>
+          <h4>Design Build</h4>
+          <p>Project management and design-build services encompass overseeing and coordinating all aspects of a project, from planning and design to construction and completion. This integrated approach ensures seamless communication, efficient resource allocation, and timely delivery of high-quality projects. Clients can benefit from a streamlined process and successful project outcomes.</p>
+          <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="svc-card-back">
+          <div class="svc-back-img" style="background-image:url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&q=80');"></div>
+          <div class="svc-back-overlay">
+            <div class="svc-back-label">Design Build</div>
+            <a href="#" class="svc-read-btn">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="svc-card-3d reveal reveal-delay-3">
+        <div class="svc-card-front">
+          <div class="svc-icon-3d"><i class="fas fa-warehouse"></i></div>
+          <div class="svc-bar"></div>
+          <h4>Industrial Warehousing</h4>
+          <p>Industrial and warehousing advisory services encompass a range of offerings tailored to businesses seeking industrial and warehousing properties and clients for their business operations. These services may include property leasing, sales, site selection, development, and property management, all geared towards meeting the unique needs of industrial clients.</p>
+          <div class="svc-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+        <div class="svc-card-back">
+          <div class="svc-back-img" style="background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&q=80');"></div>
+          <div class="svc-back-overlay">
+            <div class="svc-back-label">Industrial Warehousing</div>
+            <a href="#" class="svc-read-btn">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════ ABOUT ════════════ -->
+<div id="page-about" class="page">
+  <div class="page-hero">
+    <div class="section-eyebrow">Who We Are</div>
+    <h1>About <span>Seven Dale</span></h1>
+    <p>Asset. Performance. Optimized — we transform commercial spaces into high-performance environments that work as hard as you do.</p>
+  </div>
+  <div class="about-body">
+    <div class="about-grid-3d">
+      <div class="about-img-3d reveal">
+        <div class="about-img-placeholder">
+          <i class="fas fa-building"></i>
+          <span style="font-size:0.85rem;color:var(--text3);">Office Interior</span>
+        </div>
+      </div>
+      <div class="about-content reveal reveal-delay-1">
+        <h3>Your Trusted Partner in Corporate Real Estate</h3>
+        <p>Seven Dale Consultants is a premier design and build company specializing in commercial real estate solutions. We blend creativity with technical precision to deliver workspaces that inspire productivity and reflect your brand identity.</p>
+        <p>With over a decade of experience across Bengaluru and 15+ cities, we have partnered with Fortune 500 companies, startups, and everything in between — transforming ordinary spaces into extraordinary environments.</p>
+        <p>Our multidisciplinary team of architects, designers, project managers, and MEP consultants work seamlessly to ensure every project is delivered on time, within budget, and beyond expectations.</p>
+        <div class="about-stats-3d">
+          <div class="stat-card-3d"><div class="num">500+</div><div class="lbl">Projects</div></div>
+          <div class="stat-card-3d"><div class="num">200+</div><div class="lbl">Clients</div></div>
+          <div class="stat-card-3d"><div class="num">12+</div><div class="lbl">Years</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SERVICES ════════════ -->
+<div id="page-services" class="page">
+  <div class="page-hero">
+    <div class="section-eyebrow">What We Do</div>
+    <h1>Our <span>Services</span></h1>
+    <p>Comprehensive end-to-end solutions for your commercial real estate needs.</p>
+  </div>
+  <div class="services-body">
+    <div class="services-full-grid">
+      <div class="svc-full-card reveal"><div class="svc-icon-3d"><i class="fas fa-handshake"></i></div><h4>Transaction Advisory</h4><p>Strategic guidance for acquisitions, dispositions, lease negotiations, and workplace solutions to help you optimise your real estate portfolio.</p></div>
+      <div class="svc-full-card reveal reveal-delay-1"><div class="svc-icon-3d"><i class="fas fa-pencil-ruler"></i></div><h4>Design Build</h4><p>Integrated project management and design-build services from planning to completion, ensuring seamless delivery and successful outcomes.</p></div>
+      <div class="svc-full-card reveal reveal-delay-2"><div class="svc-icon-3d"><i class="fas fa-warehouse"></i></div><h4>Industrial Warehousing</h4><p>Tailored advisory for industrial and warehousing properties including leasing, sales, site selection, development, and property management.</p></div>
+      <div class="svc-full-card reveal"><div class="svc-icon-3d"><i class="fas fa-drafting-compass"></i></div><h4>Space Planning</h4><p>Optimizing floor plans for maximum efficiency and employee wellbeing, designing layouts that enhance collaboration and focus.</p></div>
+      <div class="svc-full-card reveal reveal-delay-1"><div class="svc-icon-3d"><i class="fas fa-bolt"></i></div><h4>MEP Consultancy</h4><p>Expert mechanical, electrical, and plumbing consultancy ensuring your workspace meets safety standards and operates at peak efficiency.</p></div>
+      <div class="svc-full-card reveal reveal-delay-2"><div class="svc-icon-3d"><i class="fas fa-leaf"></i></div><h4>Sustainable Design</h4><p>Green building solutions and LEED certification guidance to reduce environmental impact and create healthier, productive workplaces.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ PROJECTS ════════════ -->
+<div id="page-projects" class="page">
+  <div class="page-hero">
+    <div class="section-eyebrow">Our Work</div>
+    <h1>Projects <span>Managed</span></h1>
+    <p>A selection of landmark commercial projects delivered across India.</p>
+  </div>
+  <div class="projects-body">
+    <div class="proj-grid">
+      <div class="proj-card-3d reveal"><div class="proj-thumb-3d"><i class="fas fa-building"></i></div><div class="proj-info-3d"><span class="tag tag-done">Completed</span><h4>Tech Park, Whitefield</h4><p>45,000 sq.ft. corporate campus fit-out for a global IT firm.</p></div></div>
+      <div class="proj-card-3d reveal reveal-delay-1"><div class="proj-thumb-3d"><i class="fas fa-city"></i></div><div class="proj-info-3d"><span class="tag tag-done">Completed</span><h4>Co-Working Hub, MG Road</h4><p>12,000 sq.ft. flexible workspace with 300 seats and premium amenities.</p></div></div>
+      <div class="proj-card-3d reveal reveal-delay-2"><div class="proj-thumb-3d"><i class="fas fa-industry"></i></div><div class="proj-info-3d"><span class="tag tag-done">Completed</span><h4>Corporate HQ, Hyderabad</h4><p>60,000 sq.ft. headquarters for a leading BFSI company.</p></div></div>
+      <div class="proj-card-3d reveal"><div class="proj-thumb-3d"><i class="fas fa-store"></i></div><div class="proj-info-3d"><span class="tag tag-done">Completed</span><h4>Retail Flagship, Mumbai</h4><p>8,500 sq.ft. flagship store design and fit-out in Bandra Kurla Complex.</p></div></div>
+      <div class="proj-card-3d reveal reveal-delay-1"><div class="proj-thumb-3d"><i class="fas fa-hospital"></i></div><div class="proj-info-3d"><span class="tag tag-ongoing">Ongoing</span><h4>Medical Centre, Chennai</h4><p>25,000 sq.ft. diagnostic and wellness centre, fully fitted out.</p></div></div>
+      <div class="proj-card-3d reveal reveal-delay-2"><div class="proj-thumb-3d"><i class="fas fa-hotel"></i></div><div class="proj-info-3d"><span class="tag tag-ongoing">Ongoing</span><h4>Boutique Hotel, Goa</h4><p>Interior design and fit-out for a 48-room luxury boutique hotel.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ PORTFOLIO ════════════ -->
+<div id="page-portfolio" class="page">
+  <div class="page-hero">
+    <div class="section-eyebrow">Our Portfolio</div>
+    <h1>Work We're <span>Proud Of</span></h1>
+    <p>Browse our portfolio of completed commercial and corporate interiors.</p>
+  </div>
+  <div class="portfolio-body">
+    <div class="port-grid">
+      <div class="port-item-3d reveal"><i class="fas fa-image"></i><div class="port-overlay-3d"><h5>Corporate Office</h5><p>Bengaluru</p></div></div>
+      <div class="port-item-3d reveal reveal-delay-1"><i class="fas fa-image"></i><div class="port-overlay-3d"><h5>Co-Working Space</h5><p>Hyderabad</p></div></div>
+      <div class="port-item-3d reveal reveal-delay-2"><i class="fas fa-image"></i><div class="port-overlay-3d"><h5>Executive Boardroom</h5><p>Mumbai</p></div></div>
+      <div class="port-item-3d reveal reveal-delay-3"><i class="fas fa-image"></i><div class="port-overlay-3d"><h5>Retail Showroom</h5><p>Chennai</p></div></div>
+      <div class="port-item-3d reveal"><i class="fas fa-image"></i><div class="port-overlay-3d"><h5>Tech Campus</h5><p>Pune</p></div></div>
+      <div class="port-item-3d reveal reveal-delay-1"><i class="fas fa-image"></i><div class="port-overlay-3d"><h5>Reception Lounge</h5><p>Bengaluru</p></div></div>
+      <div class="port-item-3d reveal reveal-delay-2"><i class="fas fa-image"></i><div class="port-overlay-3d"><h5>Open Office</h5><p>Delhi NCR</p></div></div>
+      <div class="port-item-3d reveal reveal-delay-3"><i class="fas fa-image"></i><div class="port-overlay-3d"><h5>Conference Suite</h5><p>Bengaluru</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ CSR ════════════ -->
+<div id="page-csr" class="page">
+  <div class="page-hero">
+    <div class="section-eyebrow">Giving Back</div>
+    <h1>CSR <span>Activities</span></h1>
+    <p>At Seven Dale, we believe in building not just spaces, but a better society.</p>
+  </div>
+  <div class="csr-body">
+    <div class="csr-layout">
+      <div class="csr-cards">
+        <div class="csr-card-3d reveal"><div class="csr-card-icon"><i class="fas fa-graduation-cap"></i></div><div><h5>Education Support</h5><p>We sponsor scholarships and infrastructure for underprivileged students in government schools across Karnataka, ensuring quality education for all.</p></div></div>
+        <div class="csr-card-3d reveal reveal-delay-1"><div class="csr-card-icon"><i class="fas fa-tree"></i></div><div><h5>Green Initiatives</h5><p>Our annual tree plantation drives and zero-waste site policies reflect our commitment to environmental sustainability in every project we undertake.</p></div></div>
+        <div class="csr-card-3d reveal reveal-delay-2"><div class="csr-card-icon"><i class="fas fa-hand-holding-heart"></i></div><div><h5>Community Development</h5><p>Partnering with local NGOs to provide skill training and livelihood support to artisans and construction workers across our supply chain.</p></div></div>
+        <div class="csr-card-3d reveal reveal-delay-3"><div class="csr-card-icon"><i class="fas fa-female"></i></div><div><h5>Women Empowerment</h5><p>Supporting women-led microenterprises and ensuring at least 30% female participation in our project management and design teams.</p></div></div>
+      </div>
+      <div class="csr-feature reveal reveal-delay-1">
+        <i class="fas fa-heart"></i>
+        <h3>Building Better Communities</h3>
+        <p>Seven Dale reinvests 2% of annual profits into community welfare programs, making a tangible difference beyond our project sites.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MEDIA ════════════ -->
+<div id="page-media" class="page">
+  <div class="page-hero">
+    <div class="section-eyebrow">Latest Updates</div>
+    <h1>In the <span>Media</span></h1>
+    <p>News, press coverage, and insights from Seven Dale Consultants.</p>
+  </div>
+  <div class="media-body">
+    <div class="media-grid">
+      <div class="media-card-3d reveal"><div class="media-thumb-3d"><i class="fas fa-newspaper"></i></div><div class="media-body-3d"><div class="media-date">June 2025</div><h5>Seven Dale wins Best Commercial Interior Award 2025</h5><p>Recognised at the National Real Estate Excellence Awards for our work on the Whitefield Tech Campus.</p></div></div>
+      <div class="media-card-3d reveal reveal-delay-1"><div class="media-thumb-3d"><i class="fas fa-tv"></i></div><div class="media-body-3d"><div class="media-date">April 2025</div><h5>Featured on ET Now: The Future of Office Design</h5><p>Our MD shared insights on hybrid workspace trends and the evolution of corporate interiors in post-pandemic India.</p></div></div>
+      <div class="media-card-3d reveal reveal-delay-2"><div class="media-thumb-3d"><i class="fas fa-newspaper"></i></div><div class="media-body-3d"><div class="media-date">January 2025</div><h5>Seven Dale expands footprint to 5 new cities</h5><p>We announced expansion to Kolkata, Ahmedabad, Kochi, Coimbatore, and Indore to better serve our growing client base.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ CONTACT ════════════ -->
+<div id="page-contact" class="page">
+  <div class="page-hero">
+    <div class="section-eyebrow">Get In Touch</div>
+    <h1>Contact <span>Us</span></h1>
+    <p>Let's discuss your next workspace project. Our team is ready to help.</p>
+  </div>
+  <div class="contact-body">
+    <div class="contact-layout">
+      <div class="contact-info-3d">
+        <div class="ci-card reveal"><div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div><div><h5>Office Address</h5><p>#212, 2nd Floor, Ramanashree Arcade, 18 MG Road, Bengaluru, Karnataka – 560001</p></div></div>
+        <div class="ci-card reveal reveal-delay-1"><div class="ci-icon"><i class="fas fa-phone"></i></div><div><h5>Phone</h5><p>+91 8951424949</p></div></div>
+        <div class="ci-card reveal reveal-delay-2"><div class="ci-icon"><i class="fas fa-envelope"></i></div><div><h5>Email</h5><p>support@sevendale-consultants.com</p></div></div>
+        <div class="ci-card reveal reveal-delay-3"><div class="ci-icon"><i class="fas fa-clock"></i></div><div><h5>Working Hours</h5><p>Monday – Saturday: 9:00 AM – 6:30 PM</p></div></div>
+      </div>
+      <div class="contact-form-3d reveal reveal-delay-1">
+        <h3>Send Us a Message</h3>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="John"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+        </div>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@company.com"></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210"></div>
+        <div class="form-group"><label>Service Required</label>
+          <select>
+            <option value="">Select a service…</option>
+            <option>Transaction Advisory</option>
+            <option>Design Build</option>
+            <option>Industrial Warehousing</option>
+            <option>Space Planning</option>
+            <option>MEP Consultancy</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Your Message</label><textarea placeholder="Tell us about your project…"></textarea></div>
+        <button class="btn-primary" style="width:100%;justify-content:center;border:none;">Send Message <i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="data:image/png;base64,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" alt="Seven Dale">
+      <p>Premier design and build consultants transforming commercial real estate across India since 2013.</p>
+      <span class="footer-tagline">Asset · Performance · Optimized</span>
+    </div>
+    <div class="footer-col"><h6>Quick Links</h6><ul>
+      <li><a href="#" onclick="showPage('home');return false;">Home</a></li>
+      <li><a href="#" onclick="showPage('about');return false;">About Us</a></li>
+      <li><a href="#" onclick="showPage('services');return false;">Services</a></li>
+      <li><a href="#" onclick="showPage('projects');return false;">Projects Managed</a></li>
+      <li><a href="#" onclick="showPage('contact');return false;">Contact</a></li>
+    </ul></div>
+    <div class="footer-col"><h6>Services</h6><ul>
+      <li><a href="#">Transaction Advisory</a></li>
+      <li><a href="#">Design Build</a></li>
+      <li><a href="#">Industrial Warehousing</a></li>
+      <li><a href="#">Space Planning</a></li>
+      <li><a href="#">MEP Consultancy</a></li>
+    </ul></div>
+    <div class="footer-col"><h6>Contact</h6><ul>
+      <li><a href="#">support@sevendale-consultants.com</a></li>
+      <li><a href="#">+91 8951424949</a></li>
+      <li><a href="#">MG Road, Bengaluru</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Seven Dale Consultants. All rights reserved.</span>
+    <div class="footer-socials">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── PAGE ROUTING ── */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links>li>a').forEach(a => a.classList.remove('active'));
+  const labels = {home:'Home',about:'About',services:'Services',projects:'Projects',portfolio:'Portfolio',csr:'CSR',media:'Media',contact:'Contact'};
+  document.querySelectorAll('.nav-links>li>a').forEach(a => {
+    if(a.textContent.trim().toLowerCase().startsWith((labels[id]||'').toLowerCase())) a.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  // trigger reveals for newly shown page
+  setTimeout(triggerReveals, 100);
+}
+
+/* ── SCROLL / ENTER REVEALS ── */
+function triggerReveals() {
+  document.querySelectorAll('.page.active .reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 60) el.classList.add('visible');
+  });
+}
+window.addEventListener('scroll', triggerReveals);
+window.addEventListener('load', () => setTimeout(triggerReveals, 200));
+
+/* ── 3D TILT on hero card stack ── */
+const stack = document.getElementById('heroStack');
+if(stack) {
+  let hoveredCard = false;
+
+  // Track when hovering individual cards
+  stack.querySelectorAll('.hc').forEach(card => {
+    card.addEventListener('mouseenter', () => { hoveredCard = true; });
+    card.addEventListener('mouseleave', () => { hoveredCard = false; });
+  });
+
+  stack.addEventListener('mousemove', e => {
+    if(hoveredCard) return; // don't tilt when a card is individually hovered
+    const r = stack.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    stack.style.transform = 'perspective(1000px) rotateY('+(x*12)+'deg) rotateX('+(-y*8)+'deg)';
+  });
+  stack.addEventListener('mouseleave', () => {
+    hoveredCard = false;
+    stack.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
+  });
+}
+</script>
+</body>
+</html>
