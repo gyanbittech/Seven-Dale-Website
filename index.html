@@ -81,17 +81,22 @@ body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--t);over
 /* 3D CARD STACK */
 .hero-visual{position:relative;height:500px;perspective:1200px;}
 .hero-card-stack{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .4s var(--tr);}
-.hc{position:absolute;border-radius:22px;overflow:hidden;transition:transform .55s var(--tr),box-shadow .55s var(--tr);cursor:pointer;}
+.hc{position:absolute;border-radius:22px;overflow:hidden;transition:transform .55s var(--tr),box-shadow .55s var(--tr),z-index 0s;cursor:pointer;}
 .hc-1{width:76%;height:71%;top:0;left:11%;z-index:3;transform:rotateX(4deg) rotateY(-8deg) translateZ(0);box-shadow:var(--no);}
 .hc-2{width:64%;height:60%;bottom:3%;right:0;z-index:2;transform:rotateX(-3deg) rotateY(6deg) translateZ(-30px);box-shadow:var(--nom);}
 .hc-3{width:50%;height:44%;bottom:11%;left:0;z-index:1;transform:rotateX(2deg) rotateY(4deg) translateZ(-60px);box-shadow:var(--nos);}
-.hc img{width:100%;height:100%;object-fit:cover;display:block;}
-.hc-1:hover{transform:rotateX(4deg) rotateY(-8deg) translateZ(44px) scale(1.03)!important;box-shadow:12px 12px 30px var(--sd),-6px -6px 18px var(--sl),0 0 36px var(--crg)!important;z-index:10!important;}
-.hc-2:hover{transform:rotateX(3deg) rotateY(-6deg) translateZ(50px) scale(1.08)!important;box-shadow:12px 12px 30px var(--sd),-6px -6px 18px var(--sl),0 0 36px var(--crg)!important;z-index:10!important;}
-.hc-3:hover{transform:rotateX(3deg) rotateY(-5deg) translateZ(50px) scale(1.16)!important;box-shadow:12px 12px 30px var(--sd),-6px -6px 18px var(--sl),0 0 36px var(--crg)!important;z-index:10!important;}
-.hero-card-stack:has(.hc-2:hover) .hc-1,.hero-card-stack:has(.hc-3:hover) .hc-1{transform:rotateX(2deg) rotateY(5deg) translateZ(-40px) scale(.95)!important;z-index:2!important;}
-.hero-card-stack:has(.hc-1:hover) .hc-2,.hero-card-stack:has(.hc-3:hover) .hc-2{transform:rotateX(-2deg) rotateY(4deg) translateZ(-60px) scale(.92)!important;z-index:1!important;}
-.hero-card-stack:has(.hc-1:hover) .hc-3,.hero-card-stack:has(.hc-2:hover) .hc-3{transform:rotateX(1deg) rotateY(3deg) translateZ(-90px) scale(.88)!important;z-index:0!important;}
+.hc img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+/* Active (JS-driven) hover states — bring any card to front */
+.hc.hc-active{z-index:10!important;}
+.hc-1.hc-active{transform:rotateX(4deg) rotateY(-8deg) translateZ(44px) scale(1.03)!important;box-shadow:12px 12px 30px var(--sd),-6px -6px 18px var(--sl),0 0 36px var(--crg)!important;}
+.hc-2.hc-active{transform:rotateX(3deg) rotateY(-6deg) translateZ(50px) scale(1.08)!important;box-shadow:12px 12px 30px var(--sd),-6px -6px 18px var(--sl),0 0 36px var(--crg)!important;}
+.hc-3.hc-active{transform:rotateX(3deg) rotateY(-5deg) translateZ(50px) scale(1.16)!important;box-shadow:12px 12px 30px var(--sd),-6px -6px 18px var(--sl),0 0 36px var(--crg)!important;}
+/* Push other cards back when one is active */
+.hero-card-stack:has(.hc-2.hc-active) .hc-1,.hero-card-stack:has(.hc-3.hc-active) .hc-1{transform:rotateX(2deg) rotateY(5deg) translateZ(-40px) scale(.95)!important;z-index:2!important;}
+.hero-card-stack:has(.hc-1.hc-active) .hc-2,.hero-card-stack:has(.hc-3.hc-active) .hc-2{transform:rotateX(-2deg) rotateY(4deg) translateZ(-60px) scale(.92)!important;z-index:1!important;}
+.hero-card-stack:has(.hc-1.hc-active) .hc-3,.hero-card-stack:has(.hc-2.hc-active) .hc-3{transform:rotateX(1deg) rotateY(3deg) translateZ(-90px) scale(.88)!important;z-index:0!important;}
+/* Show label on active card */
+.hc.hc-active .hc-label{opacity:1;}
 .hc-label{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,46,.85) 0%,transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:20px;opacity:0;transition:opacity .3s ease;pointer-events:none;border-radius:inherit;}
 .hc:hover .hc-label{opacity:1;}
 .hc-label h4{font-family:'Montserrat',sans-serif;font-size:.9rem;font-weight:800;color:#fff;margin-bottom:3px;}
@@ -103,6 +108,70 @@ body{font-family:'Open Sans',sans-serif;background:var(--bg);color:var(--t);over
 @keyframes fy{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .float-tag .ft-num{font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:900;color:var(--cr);}
 .float-tag .ft-lbl{font-size:.67rem;color:var(--t2);margin-top:2px;font-weight:600;}
+
+/* JOURNEY SO FAR */
+.journey{padding:0 60px 90px;background:var(--bg);position:relative;overflow:hidden;}
+.journey::before{content:'';position:absolute;bottom:0;right:0;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(192,57,43,.05),transparent 70%);pointer-events:none;}
+
+/* CTA Banner above journey */
+.journey-cta-bar{background:var(--ch);margin:0 0 70px;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;overflow:hidden;}
+.journey-cta-bar::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cr);}
+.journey-cta-bar::after{content:'';position:absolute;right:120px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(192,57,43,.07);pointer-events:none;}
+.jcb-left{display:flex;align-items:center;gap:18px;}
+.jcb-dash{width:36px;height:2px;background:var(--cr);flex-shrink:0;}
+.jcb-text{font-family:'Montserrat',sans-serif;font-size:.88rem;font-weight:600;color:rgba(255,255,255,.72);letter-spacing:.02em;}
+.jcb-text strong{color:#fff;font-weight:800;}
+
+/* Main journey layout */
+.journey-inner{display:grid;grid-template-columns:1fr 1.15fr;gap:80px;align-items:center;}
+
+/* Left side */
+.journey-left{position:relative;}
+.journey-logo-mark{width:64px;height:64px;margin-bottom:28px;position:relative;}
+.journey-logo-mark svg{width:100%;height:100%;}
+.journey-tagline{font-family:'Montserrat',sans-serif;font-size:clamp(1.6rem,2.4vw,2.3rem);font-weight:900;color:var(--ch);line-height:1.22;margin-bottom:18px;}
+.journey-tagline .jt-accent{color:var(--cr);}
+.journey-tagline .jt-outline{-webkit-text-stroke:1.5px var(--ch);color:transparent;}
+.journey-rule{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.journey-rule span{width:44px;height:3px;background:var(--cr);border-radius:2px;display:block;}
+.journey-rule em{width:10px;height:10px;background:var(--cr);border-radius:50%;display:block;}
+.journey-body{font-size:.88rem;color:var(--t2);line-height:1.9;margin-bottom:32px;max-width:440px;}
+.journey-body strong{color:var(--ch);font-weight:700;}
+.journey-readmore{display:inline-flex;align-items:center;gap:12px;font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ch);text-decoration:none;background:var(--bg);box-shadow:var(--nom);padding:14px 26px;border-radius:12px;transition:all .28s var(--tr);position:relative;overflow:hidden;}
+.journey-readmore::before{content:'';position:absolute;inset:0;background:var(--cr);transform:translateX(-100%);transition:transform .32s var(--tr);z-index:0;border-radius:12px;}
+.journey-readmore:hover::before{transform:translateX(0);}
+.journey-readmore span,.journey-readmore i{position:relative;z-index:1;transition:color .25s;}
+.journey-readmore:hover span,.journey-readmore:hover i{color:#fff;}
+
+/* Floating accent pills */
+.journey-pills{display:flex;gap:10px;margin-top:36px;flex-wrap:wrap;}
+.jpill{display:inline-flex;align-items:center;gap:7px;background:var(--bg);box-shadow:var(--nos);border-radius:100px;padding:7px 14px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;color:var(--t2);letter-spacing:.04em;}
+.jpill i{color:var(--cr);font-size:.72rem;}
+
+/* Right side — visual composition */
+.journey-visual{position:relative;height:460px;}
+.jv-img-main{position:absolute;top:0;left:50px;right:0;bottom:60px;border-radius:24px;overflow:hidden;box-shadow:var(--no);}
+.jv-img-main img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--tr);}
+.journey-visual:hover .jv-img-main img{transform:scale(1.04);}
+
+/* Red frame accent */
+.jv-frame{position:absolute;top:-16px;left:24px;right:60px;bottom:76px;border:3px solid var(--cr);border-radius:26px;opacity:.35;pointer-events:none;}
+
+/* Floating brand chip */
+.jv-chip{position:absolute;top:24px;right:-10px;background:var(--cr);color:#fff;font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;padding:9px 20px;border-radius:0 12px 12px 0;box-shadow:4px 4px 12px rgba(192,57,43,.4);display:flex;align-items:center;gap:8px;z-index:5;}
+.jv-chip::before{content:'';width:6px;height:6px;background:rgba(255,255,255,.6);border-radius:50%;}
+
+/* Stats card floating */
+.jv-stats{position:absolute;bottom:0;left:0;background:var(--bg);border-radius:20px;box-shadow:var(--no);padding:22px 28px;display:flex;gap:24px;z-index:4;}
+.jv-stat{text-align:center;}
+.jv-stat .jvs-num{font-family:'Montserrat',sans-serif;font-size:1.55rem;font-weight:900;color:var(--ch);line-height:1;}
+.jv-stat .jvs-num span{color:var(--cr);}
+.jv-stat .jvs-lbl{font-size:.6rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:4px;}
+.jv-divider{width:1px;background:rgba(163,177,198,.4);align-self:stretch;}
+
+/* Decorative dot grid */
+.jv-dots{position:absolute;bottom:50px;right:-20px;display:grid;grid-template-columns:repeat(5,8px);gap:7px;z-index:2;}
+.jv-dots span{width:8px;height:8px;border-radius:50%;background:rgba(192,57,43,.22);}
 
 /* KNOW US */
 .know-us{padding:80px 60px;background:var(--bg2);border-top:1px solid rgba(163,177,198,.3);border-bottom:1px solid rgba(163,177,198,.3);}
@@ -344,12 +413,7 @@ footer{background:var(--ch);padding:58px 60px 24px;}
       <a href="#" class="btn-p" onclick="showPage('services');return false;">Explore Services <i class="fas fa-arrow-right"></i></a>
       <a href="#" class="btn-s" onclick="showPage('projects');return false;">View Projects</a>
     </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="num">500<span>+</span></div><div class="lbl">Projects</div></div>
-      <div class="hero-stat"><div class="num">200<span>+</span></div><div class="lbl">Clients</div></div>
-      <div class="hero-stat"><div class="num">15<span>+</span></div><div class="lbl">Cities</div></div>
-      <div class="hero-stat"><div class="num">12<span>+</span></div><div class="lbl">Years</div></div>
-    </div>
+
   </div>
   <div class="hero-visual">
     <div class="hero-card-stack" id="heroStack">
@@ -389,6 +453,60 @@ footer{background:var(--ch);padding:58px 60px 24px;}
     <div class="svc-card reveal rd3">
       <div class="svc-front"><div class="svc-icon"><i class="fas fa-warehouse"></i></div><div class="svc-bar"></div><h4>Industrial Warehousing</h4><p>Industrial and warehousing advisory services encompass a range of offerings tailored to businesses seeking industrial and warehousing properties and clients for their business operations. These services may include property leasing, sales, site selection, development, and property management, all geared towards meeting the unique needs of industrial clients.</p><div class="svc-arrow"><i class="fas fa-arrow-right"></i></div></div>
       <div class="svc-back"><div class="svc-back-img" style="background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&q=80');"></div><div class="svc-back-ov"><div class="svc-back-lbl">Industrial Warehousing</div><a href="#" class="svc-read">Read More <i class="fas fa-arrow-right"></i></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY SO FAR -->
+<div class="journey-cta-bar">
+  <div class="jcb-left">
+    <div class="jcb-dash"></div>
+    <div class="jcb-text">Need more information on the <strong>Gamut of Services</strong> we provide and our capabilities?</div>
+  </div>
+  <a href="#" class="btn-p" onclick="showPage('services');return false;" style="white-space:nowrap;flex-shrink:0;">View All Services <i class="fas fa-arrow-right"></i></a>
+</div>
+
+<section class="journey reveal">
+  <div class="journey-inner">
+    <div class="journey-left">
+      <div class="journey-logo-mark">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="30" height="30" rx="4" stroke="#C0392B" stroke-width="3"/>
+          <rect x="20" y="20" width="30" height="30" rx="4" fill="none" stroke="#1A1A2E" stroke-width="3"/>
+          <rect x="12" y="12" width="30" height="30" rx="4" fill="rgba(192,57,43,0.12)" stroke="#C0392B" stroke-width="1.5" stroke-dasharray="4 3"/>
+        </svg>
+      </div>
+      <div class="journey-rule"><span></span><em></em></div>
+      <h2 class="journey-tagline">Journey <span class="jt-accent">So</span><br><span class="jt-outline">Far</span></h2>
+      <p class="journey-body"><strong>Seven Dale Consultants</strong> — a commercial real estate firm, specializing in providing integrated workplace solutions for clients under commercial, industrial and hospitality segments.<br><br>Since 2013, we've transformed over <strong>500 spaces</strong> across 15+ cities — from Bengaluru boardrooms to Mumbai flagship stores — driven by precision, passion and an obsession with quality.</p>
+      <a href="#" class="journey-readmore" onclick="showPage('about');return false;"><span>Read More</span> <i class="fas fa-arrow-right"></i></a>
+      <div class="journey-pills">
+        <div class="jpill"><i class="fas fa-check-circle"></i> Since 2013</div>
+        <div class="jpill"><i class="fas fa-map-marker-alt"></i> 15+ Cities</div>
+        <div class="jpill"><i class="fas fa-award"></i> ISO Certified</div>
+        <div class="jpill"><i class="fas fa-users"></i> 200+ Clients</div>
+      </div>
+    </div>
+    <div class="journey-visual reveal rd2">
+      <div class="jv-frame"></div>
+      <div class="jv-img-main">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&q=85" alt="Seven Dale Office Interior">
+      </div>
+      <div class="jv-chip">Seven Dale Consultants</div>
+      <div class="jv-stats">
+        <div class="jv-stat"><div class="jvs-num">500<span>+</span></div><div class="jvs-lbl">Projects</div></div>
+        <div class="jv-divider"></div>
+        <div class="jv-stat"><div class="jvs-num">12<span>+</span></div><div class="jvs-lbl">Years</div></div>
+        <div class="jv-divider"></div>
+        <div class="jv-stat"><div class="jvs-num">&#8377;800<span>Cr</span></div><div class="jvs-lbl">Managed</div></div>
+      </div>
+      <div class="jv-dots">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
     </div>
   </div>
 </section>
@@ -551,15 +669,42 @@ window.addEventListener('scroll',triggerReveals);
 window.addEventListener('load',()=>setTimeout(triggerReveals,200));
 const stack=document.getElementById('heroStack');
 if(stack){
-  let ch=false;
-  stack.querySelectorAll('.hc').forEach(c=>{c.addEventListener('mouseenter',()=>{ch=true;});c.addEventListener('mouseleave',()=>{ch=false;});});
+  const cards=[...stack.querySelectorAll('.hc')];
+  let activeCard=null;
+
+  function getBackmostCardAt(mx,my){
+    const hits=[];
+    cards.forEach(c=>{
+      const r=c.getBoundingClientRect();
+      if(mx>=r.left&&mx<=r.right&&my>=r.top&&my<=r.bottom)hits.push(c);
+    });
+    if(!hits.length)return null;
+    // Sort ascending by z-index so the back-most card (lowest z) is first
+    hits.sort((a,b)=>parseInt(getComputedStyle(a).zIndex||0)-parseInt(getComputedStyle(b).zIndex||0));
+    return hits[0];
+  }
+
   stack.addEventListener('mousemove',e=>{
-    if(ch)return;
     const r=stack.getBoundingClientRect();
-    const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-    stack.style.transform='perspective(1200px) rotateY('+(x*10)+'deg) rotateX('+(-y*7)+'deg)';
+    const mx=e.clientX,my=e.clientY;
+    const x=(mx-r.left)/r.width-.5,y=(my-r.top)/r.height-.5;
+    const target=getBackmostCardAt(mx,my);
+    if(target!==activeCard){
+      if(activeCard)activeCard.classList.remove('hc-active');
+      activeCard=target;
+      if(activeCard)activeCard.classList.add('hc-active');
+    }
+    if(!activeCard){
+      stack.style.transform='perspective(1200px) rotateY('+(x*10)+'deg) rotateX('+(-y*7)+'deg)';
+    } else {
+      stack.style.transform='perspective(1200px) rotateY(0) rotateX(0)';
+    }
   });
-  stack.addEventListener('mouseleave',()=>{ch=false;stack.style.transform='perspective(1200px) rotateY(0) rotateX(0)';});
+
+  stack.addEventListener('mouseleave',()=>{
+    if(activeCard){activeCard.classList.remove('hc-active');activeCard=null;}
+    stack.style.transform='perspective(1200px) rotateY(0) rotateX(0)';
+  });
 }
 </script>
 </body>
